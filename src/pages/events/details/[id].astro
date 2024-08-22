@@ -1,0 +1,35 @@
+---
+import EventDetails from "../../../components/events/eventDetails.svelte";
+import Layout from '../../../layouts/Layout.astro';
+import { eventDetails } from "../../../apiData/eventDetails";
+import {findId} from "../../../apiData/eventDetails"
+
+// Generate static paths
+export async function getStaticPaths() {
+  return eventDetails.map((detail) => {
+    return {
+      params: { id: detail.id },
+      props: { detail }
+    };
+  });
+}
+
+// Fetch parameters and props
+const { id } = Astro.params;
+console.log(id,"id");
+// const detail = details.find(detail => detail.id.toString() === id);
+const eventDetail = findId(id);
+
+console.log(eventDetail,"detail");
+
+// if (!detail) {
+//   throw new Error(`Detail not found for id: ${id}`);
+// }
+
+---
+
+<Layout>
+    <main>
+        <EventDetails client:only {eventDetail}/>
+    </main>
+</Layout>
