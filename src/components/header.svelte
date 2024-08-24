@@ -443,7 +443,12 @@
           <li
    
           >
-            <a href="/addContest">Add Contest</a>
+            <a href="/events/event-list">Participate</a>
+          </li>
+          <li
+   
+          >
+            <a href="/events/event-list">Events</a>
           </li>
         </ul>
       </li>

@@ -260,7 +260,7 @@
     flex: 0 0 auto !important;
     width: 19.333333% !important;
   }
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 600px) {
     .col-lg {
       flex: 0 0 auto !important;
       width: 49.333333% !important;

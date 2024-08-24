@@ -88,6 +88,7 @@
     </div>
   </div>
   
+  <!-- contestants -->
   <section class="popular-categories">
     <div class="container-fluid">
       <div class="row">
@@ -108,7 +109,7 @@
                 <img
                   src={`${baseUrl}${contestant.mediaFile}`}
                   alt="images"
-                  class="h-fit "
+                  class="h-[25vh]"
                 />
   
                 <div class="down-content">
@@ -195,6 +196,7 @@
     </div>
   </section>
   
+  <!-- winners -->
   <section class="popular-categories">
     <div class="container-fluid">
       <div class="row">
@@ -215,7 +217,8 @@
                 <img
                   src={`${baseUrl}${contestant.mediaFile}`}
                   alt="images"
-                  height="150"
+                  class="h-[25vh]"
+                  height=""
                 />
   
                 <div class="down-content">

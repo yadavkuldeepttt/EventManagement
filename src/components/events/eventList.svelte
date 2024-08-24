@@ -400,7 +400,7 @@
               {:else} 
                 {#each events as event}
                   <div class="event" data-testid="eventList">
-                    <a href={`/events/details/${event.id}`} class="w-[22vw]">
+                    <a href={`/events/details/${event.id}`} class="w-[22vw] item">
                     <div class="single-speaker-wrap">
                       <div class="imgs">
                           <img src={event.objDetails.image} alt="">
@@ -461,8 +461,8 @@
   .eventsResponsive .filtersSection,.eventsResponsive .eventsSection{
     width: 100vw!important;
   }
-  .eventsResponsive .eventsSection .event a{
-    width: 80vw;
+  .eventsResponsive .eventsSection .event .item{
+    width: 87vw;
   }
 }
 

@@ -266,15 +266,15 @@
       <div class="col-lg-12">
         <div class="slider-wrapper-closed mt-2">
           <Splide
-            class="splide"
+            class="splide splideMobile max-w-full"
+      
             options={{
               rewind: true,
               AutoScroll: {
                 speed: 3,
               },
-              autoplay: true,
-              width: 1000,
               type: "loop",
+        
               breakpoints: {
                 1500: {
                   perPage: 3,
@@ -282,7 +282,7 @@
                 768: {
                   perPage: 2,
                 },
-                500: {
+                600: {
                   perPage: 1,
                 },
               },
@@ -291,11 +291,10 @@
             aria-label="My Favorite Images"
           >
             {#each closedContests as contest (contest.id)}
-              <SplideSlide>
+              <SplideSlide >
                 <img
                   src={contest.image}
                   alt={`Image ${contest.id}`}
-                  class="img-fit"
                 />
                 <div class="down-content">
                   <div class="row">
@@ -394,6 +393,12 @@
 </section>
 
 <style>
+@media screen and (max-width: 600px) {
+    .slider-wrapper-closed .down-content {
+        width: 89vw;
+    }
+}
+
   .slider-wrapper {
     display: flex;
     justify-content: center;

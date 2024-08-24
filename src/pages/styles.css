@@ -978,7 +978,7 @@ Banner Style
 */
 
 .main-banner {
-  background-image: url(../lib/images/banner-bg.jpg);
+  background-image: url(../assets/images/banner-bg.jpg);
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
@@ -1295,7 +1295,7 @@ closed contests
 */
 
 section.closed-contests {
-  background-image: url(../lib/images/closed-bg.jpg);
+  background-image: url(../assets/images/closed-bg.jpg);
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
@@ -1433,7 +1433,7 @@ page heading
 */
 
 .page-heading {
-  background-image: url(../lib/images/heading-bg.jpg);
+  background-image: url(../assets/images/heading-bg.jpg);
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
@@ -1489,6 +1489,18 @@ page heading
   display: inline-block;
   text-align: center;
 }
+
+
+@media screen and (max-width:600px) {
+  .page-heading h2 {
+    font-size: 29px;
+  }
+  .page-heading {
+    padding-top: 145px;
+    padding-bottom: 55px;
+  }
+}
+
 @media (min-width: 992px) {
   .page-heading .main-content .counter div {
     margin: 0px 10px;
@@ -2051,6 +2063,14 @@ Categories Page
   margin-right: 10px;
 }
 
+
+@media screen and (max-width:600px){
+  .top-categories{
+    margin-top: 40px;
+    
+  }
+}
+
 .featured-contests .item {
   margin-bottom: 30px;
 }
@@ -2161,6 +2181,90 @@ Categories Page
   display: inline-block;
   text-align: center;
   color: #afafaf;
+}
+
+
+/* Media query for mobile devices */
+@media (max-width: 600px) {
+ 
+  .featured-contests .item {
+    margin-bottom: 15px;
+  }
+  .featured-contests .item .hover-effect .content .border-button  {
+      font-size: 11px!important;
+      padding:8px 10px!important;
+  }
+  .featured-contests .item .hover-effect .content .border-button a {
+    font-size: 11px!important;
+}
+
+  .featured-contests .thumb img {
+    max-height: 40vh;
+  }
+  .featured-contests .item .hover-effect {
+    bottom: 10px!important;
+    transition: all 0.5s;
+  }
+
+  .featured-contests .hover-effect .content {
+    padding: 10px;
+  }
+  .featured-contests .item .hover-effect .content {
+ 
+    padding: 2px 20px!important;
+}
+
+  .featured-contests .hover-effect h4 {
+    font-size: 14px!important;
+    margin-bottom: 10px!important;
+    margin-top: 10px!important;
+  }
+  .featured-contests .item .hover-effect .content .top-content span.award{
+    font-size: 11px!important;
+    margin-top: 0.3rem!important;
+    
+  }
+  .featured-contests .item .hover-effect .content .top-content span.price{
+    font-size: 15px!important;
+  }
+
+  .featured-contests .hover-effect .info {
+    display:none!important;
+  }
+
+  .featured-contests .hover-effect {
+    background: rgba(0, 0, 0, 0.7); /* Slightly darker overlay on mobile */
+  }
+}
+
+/* Media query for mobile devices */
+@media (max-width: 768px) {
+  .featured-contests .item {
+    margin-bottom: 20px;
+  }
+
+  .featured-contests .thumb img {
+    max-height: 40vh;
+  }
+
+  .featured-contests .hover-effect .content {
+    padding: 10px;
+  }
+
+  .featured-contests .hover-effect h4 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-top: 21px;
+    margin-bottom: 10px;
+  }
+
+  .featured-contests .hover-effect .info {
+    display:none!important;
+  }
+
+  .featured-contests .hover-effect {
+    background: rgba(0, 0, 0, 0.7); /* Slightly darker overlay on mobile */
+  }
 }
 
 .testimonials {
@@ -2492,7 +2596,7 @@ body {
   overflow-x: hidden;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 600px) {
     .main-banner h2 {
       font-size: 29px;
       line-height: 46px;
@@ -2623,9 +2727,7 @@ body {
   .pricing-item {
     margin-bottom: 15px;
   }
-  .featured-contests .item .hover-effect .content .info {
-    display: flex !important;
-  }
+
 }
 
 @media (max-width: 1200px) {

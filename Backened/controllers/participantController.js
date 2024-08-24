@@ -5,9 +5,9 @@ const saveParticipant = async (req, res) => {
     try {
         const { userDetails, transportDetails } = req.body;
       
-        console.log(userDetails);
+        console.log(userDetails,"userdetails");
         console.log("--------------------------");
-        console.log(transportDetails);
+        console.log(transportDetails,"transportDetails");
       
         const newUser = new Participant(userDetails.objDetails);
         const newTransport = new Transport(transportDetails.objDetails);
