@@ -45,6 +45,38 @@
   let foundUser = {};
   let token = "";
 
+  let clientId = 'YOUR_GOOGLE_CLIENT_ID'; // Replace with your actual Google Client ID
+
+function initGoogleSignIn() {
+  google.accounts.id.initialize({
+    client_id: clientId,
+    callback: handleCredentialResponse
+  });
+
+  google.accounts.id.prompt(); // This triggers the Google sign-in prompt
+}
+
+async function handleCredentialResponse(response) {
+    console.log("Encoded JWT ID token: " + response.credential);
+
+    // Send the credential (JWT token) to the backend for validation
+  await fetch('http://localhost:4747/api/auth/google', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        token: response.credential,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log('User info:', data);
+        // You can now redirect to the dashboard or store the user's info
+      })
+      .catch((error) => console.error('Error:', error));
+  }
+
   // const registerAuth = async () => {
   //   try {
   //     const response = await axios.post("http://localhost:4747/auth/register", {
@@ -285,7 +317,7 @@
               <span class="icon_title">Connect with Facebook</span>
             </a>
 
-            <a href="#" class="social_box google">
+            <a href="#" class="social_box google" on:click={initGoogleSignIn}>
               <span class="icon"><i class="fab fa-google-plus"></i></span>
               <span class="icon_title">Connect with Google</span>
             </a>

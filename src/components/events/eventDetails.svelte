@@ -352,8 +352,7 @@
         isValid = false;
         row.objDetails[`${field}Error`] = true;
         errorMessages[row.id][field] = true; // Set the error visibility
-        console.log(errorMessages,"errormesssages");
-        
+        console.log(errorMessages, "errormesssages");
       } else {
         row.objDetails[`${field}Error`] = false;
         errorMessages[row.id][field] = false; // Clear the error visibility
@@ -441,13 +440,11 @@
       return { ...transport };
     });
 
-    
-    
     if (formIsValid) {
-      console.log(filteredUser,"userDetails");
-      console.log(userDetails,"userDetails");    
-      console.log(transportDetails,"transportDetails");
-      
+      console.log(filteredUser, "userDetails");
+      console.log(userDetails, "userDetails");
+      console.log(transportDetails, "transportDetails");
+
       addParticipantNames();
       // const response = await fetch(
       //   "http://localhost:5050/api/participant/saveParticipant ",
@@ -483,8 +480,7 @@
 
       // Trigger reactivity in Svelte by reassigning the errorMessages object
       errorMessages = { ...errorMessages };
-      console.log(errorMessages,"errormessages");
-      
+      console.log(errorMessages, "errormessages");
 
       validateRow(row); // Validate the entire row on input change
     };
@@ -551,11 +547,21 @@
   function updateEndDate(row) {
     if (row.objDetails.startDate && row.objDetails.days) {
       const startDate = new Date(row.objDetails.startDate);
-      const endDate = new Date(startDate);
-      endDate.setDate(startDate.getDate() + row.objDetails.days);
+
+      // Correct way to add days by using UTC time to avoid timezone issues
+      const endDate = new Date(
+        startDate.getTime() + row.objDetails.days * 24 * 60 * 60 * 1000
+      );
+
+      // Format the end date to 'YYYY-MM-DD'
       row.objDetails.endDate = endDate.toISOString().split("T")[0];
+
+      console.log("Start Date:", startDate);
+      console.log("Days to Add:", row.objDetails.days);
+      console.log("End Date:", row.objDetails.endDate);
     }
   }
+
   // calculate amount
   function calculateAmount(row) {
     const days = row.objDetails.days;
@@ -631,8 +637,7 @@
     event.preventDefault(); // Prevent the form from submitting
 
     // Close the modal
-    const modal = document.getElementById("my_modal_11");
-    modal.style.display = "none";
+    const modal = document.getElementById("my_modal_11").close();
 
     // Reset any validation or form states if necessary
     const form = document.getElementById("form");
@@ -1361,6 +1366,7 @@
                                 /></td
                               >
                               <td class="text-center">{row.id}</td>
+                              <!-- name -->
                               <td>
                                 <div>
                                   <input
@@ -1386,6 +1392,7 @@
                               </td>
 
                               <!-- pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" -->
+                               <!-- book id -->
                               <td
                                 ><input
                                   type="text"
@@ -1394,6 +1401,7 @@
                                   placeholder=" "
                                 />
                               </td>
+                              <!-- receipt id -->
                               <td
                                 ><input
                                   type="text"
@@ -1402,6 +1410,7 @@
                                   placeholder=" "
                                 />
                               </td>
+                              <!-- transport coming name -->
                               <td>
                                 <select
                                   name=""
@@ -1433,6 +1442,7 @@
                                   Please select transport coming.
                                 </span>
                               </td>
+                              <!-- transport return name -->
                               <td>
                                 <select
                                   name=""
@@ -1466,7 +1476,7 @@
                                   Please select transport return.
                                 </span>
                               </td>
-
+                             <!-- mobile -->
                               <td
                                 ><input
                                   type="text"
@@ -1485,6 +1495,7 @@
                                   Please enter mobile number.
                                 </span>
                               </td>
+                              <!-- pincode -->
                               <td
                                 ><input
                                   type="text"
@@ -1503,6 +1514,7 @@
                                   Please enter your pincode.
                                 </span>
                               </td>
+                              <!-- gender -->
                               <td>
                                 <select
                                   name=""
@@ -1525,6 +1537,7 @@
                                   Please select gender.
                                 </span>
                               </td>
+                              <!-- age -->
                               <td
                                 ><input
                                   type="number"
@@ -1544,6 +1557,7 @@
                                   Please enter age.
                                 </span>
                               </td>
+                              <!-- start date -->
                               <td
                                 ><input
                                   type="date"
@@ -1564,6 +1578,7 @@
                                   Please select from date.
                                 </span>
                               </td>
+                              <!--days -->
                               <td
                                 ><input
                                   type="number"
@@ -1584,15 +1599,17 @@
                                   Please enter number of days.
                                 </span>
                               </td>
+                              <!-- end date -->
                               <td
                                 ><input
                                   type="date"
                                   class="form-control border-gray-300"
                                   style="font-size: 14px;color:rgba(0,0,0,0.8)"
                                   bind:value={row.objDetails.endDate}
+                                  readonly
                                 />
                               </td>
-
+                             <!-- amount -->
                               <td
                                 ><input
                                   type="text"
@@ -1601,6 +1618,7 @@
                                   readonly
                                 />
                               </td>
+                              <!-- aadhar -->
                               <td
                                 ><input
                                   type="text"
@@ -1620,6 +1638,7 @@
                                   Please enter aadhar number.
                                 </span>
                               </td>
+                              <!-- delete button -->
                               <td>
                                 <button
                                   class="btn btn-light"
@@ -1766,9 +1785,10 @@
   </div>
 </section>
 
-<!--event details page end-->
-
 <style>
+  section {
+    margin-top: 70px;
+  }
   :root:has(
       :is(
           .modal-open,
@@ -1807,15 +1827,6 @@
     min-width: 70px !important;
   }
 
-  /* Add more styles as needed for your specific design */
-
-  .participant-mobile {
-    background-color: rgb(208, 220, 243);
-  }
-
-  .participant-mobile:hover {
-    background-color: rgba(208, 220, 243, 0.43);
-  }
   .table-responsive::-webkit-scrollbar {
     height: 30px;
   }
@@ -1823,40 +1834,6 @@
   .btn:focus,
   input:focus {
     box-shadow: none;
-  }
-
-  .event-dts-places {
-    padding: 40px;
-  }
-
-  .event-dts-places ul {
-    gap: 24px;
-  }
-  .event-dts-places li {
-    width: 48%;
-    width: calc(50% - 24px);
-    display: inline-block;
-    position: relative;
-    background: var(--clr-bg-white);
-    padding: 26px;
-    padding-left: 108px;
-    border-radius: 20px;
-    min-height: 98px;
-  }
-
-  .event-dts-places li .icon {
-    background: var(--clr-white-light);
-    border-radius: 10px;
-    width: 58px;
-    height: 58px;
-    text-align: center;
-    line-height: 58px;
-    position: absolute;
-    left: 20px;
-    top: 50%;
-    -webkit-transform: translate(0, -50%);
-    -moz-transform: translate(0, -50%);
-    transform: translate(0, -50%);
   }
 
   .event-dts-places li .icon img {
