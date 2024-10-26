@@ -5,11 +5,12 @@
   // import GoogleSignIn from "./googleSignIn.svelte";
   export let eventDetail;
 
-  let selectedTransportComingName = "abc";
-  let selectedTransportReturnName = "xyz";
+  let selectedTransportComingName = {};
+  let selectedTransportReturnName = {};
+  let totalAmountOfUsers = 0;
 
-  let transportComing = ["abc"];
-  let transportReturn = ["xyz"];
+  let transportComing = [];
+  let transportReturn = [];
 
   // user details
   let userDetails = [
@@ -19,8 +20,8 @@
         name: "",
         bookId: "",
         receiptId: "",
-        transportComingName: "abc",
-        transportReturnName: "xyz",
+        transportComingName: "",
+        transportReturnName: "",
         mobile: "",
         pincode: "",
         gender: "male",
@@ -352,6 +353,7 @@
         isValid = false;
         row.objDetails[`${field}Error`] = true;
         errorMessages[row.id][field] = true; // Set the error visibility
+        errorMessages[row.id][field] = "Please enter this";
         console.log(errorMessages, "errormesssages");
       } else {
         row.objDetails[`${field}Error`] = false;
@@ -418,7 +420,7 @@
   }
 
   // submit form
-  const submitForm = async (event) => {
+  const submitForm = async (event, action) => {
     event.preventDefault();
 
     const form = document.getElementById("form");
@@ -446,27 +448,40 @@
       console.log(transportDetails, "transportDetails");
 
       addParticipantNames();
-      // const response = await fetch(
-      //   "http://localhost:5050/api/participant/saveParticipant ",
-      //   {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({ userDetails, transportDetails }),
-      //   }
-      // );
-      // console.log(response, "response");
 
-      // if (response.ok) {
-      //   alert("Data saved successfully");
-      //   console.log(response, "response");
-      //   document.getElementById("my_modal_11").style.display = "none"; // Hide the modal
-      // } else {
-      //   alert("Failed to save data");
-      //   console.error(response);
-      //   console.log(response, "response");
-      // }
+      if (action === "save") {
+        addParticipantNames();
+
+        // Uncomment the fetch call when backend API is ready
+        // const response = await fetch("http://localhost:5050/api/participant/saveParticipant", {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify({ userDetails, transportDetails }),
+        // });
+        // if (response.ok) {
+        //   alert("Data saved successfully");
+        //   document.getElementById("my_modal_11").style.display = "none"; // Hide the modal
+        // } else {
+        //   alert("Failed to save data");
+        //   console.error(response);
+        // }
+      } else if (action === "pay") {
+        // Generate unique IDs
+        const paymentId = `PAY${Date.now()}`;
+        const transactionId = `TXN${Date.now()}`;
+        // Redirect to payment page with user details and transport details
+        window.location.href = `/payments/payment?data=${encodeURIComponent(
+          JSON.stringify({
+            userDetails,
+            transportDetails,
+            totalAmountOfUsers,
+            paymentId,
+            transactionId,
+          })
+        )}`;
+      }
     } else {
       alert("Please correct the errors in the form.");
     }
@@ -506,18 +521,19 @@
   }
 
   function handleTransportChange(user) {
+    const userId = user.id;
     if (
-      selectedTransportComingName &&
-      !user.objDetails.transportComingName.includes(selectedTransportComingName)
+      selectedTransportComingName[userId] &&
+      !user.objDetails.transportComingName.includes(selectedTransportComingName[userId])
     ) {
-      user.objDetails.transportComingName.push(selectedTransportComingName);
+      user.objDetails.transportComingName.push(selectedTransportComingName[userId]);
     }
 
     if (
-      selectedTransportReturnName &&
-      !user.objDetails.transportReturnName.includes(selectedTransportReturnName)
+      selectedTransportReturnName[userId] &&
+      !user.objDetails.transportReturnName.includes(selectedTransportReturnName[userId])
     ) {
-      user.objDetails.transportReturnName.push(selectedTransportReturnName);
+      user.objDetails.transportReturnName.push(selectedTransportReturnName[userId]);
     }
 
     // Trigger reactivity
@@ -566,9 +582,48 @@
   function calculateAmount(row) {
     const days = row.objDetails.days;
     const age = row.objDetails.age;
-    const rateRule =
-      age > 18 ? eventDetail.rateRules[1] : eventDetail.rateRules[0];
-    row.objDetails.amount = days * rateRule.amount;
+    let selectedRateRule;
+
+    // Select the rate rule based on age
+    if (age <= 5) {
+      selectedRateRule = eventDetail.rateRules.find(
+        (rule) => rule.category === "kid"
+      );
+    } else if (age <= 18) {
+      selectedRateRule = eventDetail.rateRules.find(
+        (rule) => rule.category === "student"
+      );
+    } else if (age > 18) {
+      selectedRateRule = eventDetail.rateRules.find(
+        (rule) => rule.category === "adult"
+      );
+    } else {
+      selectedRateRule = eventDetail.rateRules.find(
+        (rule) => rule.category === "default"
+      );
+    }
+
+    // Initialize the total amount with the baseAmount
+    let totalAmount = selectedRateRule.baseAmount;
+
+    // Apply any additional amount rules based on conditions (like time)
+    // selectedRateRule.amountConditions.forEach((condition) => {
+    //   if (condition.operator === "after" && entryTime >= condition.time) {
+    //     totalAmount += condition.amount;
+    //   } else if (condition.operator === "full") {
+    //     totalAmount += condition.amount;
+    //   }
+    // });
+
+    // Calculate the final amount for the given days
+    row.objDetails.amount = days * totalAmount;
+
+    // Calculate the total amount from all users
+    totalAmountOfUsers = userDetails.reduce((sum, user) => {
+      return sum + (user.objDetails.amount || 0); // Ensures that undefined amounts are treated as 0
+    }, 0);
+
+    console.log(totalAmountOfUsers, "Total Amount");
   }
   // call function updateEndDate and CalculateAmount
   $: {
@@ -1392,7 +1447,7 @@
                               </td>
 
                               <!-- pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" -->
-                               <!-- book id -->
+                              <!-- book id -->
                               <td
                                 ><input
                                   type="text"
@@ -1419,14 +1474,14 @@
                                     .transportComingNameError
                                     ? 'border-pink-600 ring-2 ring-pink-200'
                                     : 'border-gray-300'}"
-                                  bind:value={selectedTransportComingName}
+                                  bind:value={selectedTransportComingName[row.id]}
                                   on:input={handleInput(
                                     row,
                                     "transportComingName"
                                   )}
                                   on:change={() => handleTransportChange(row)}
                                 >
-                                  <option value="" disabled
+                                  <option value="none" disabled
                                     >Select Transport Coming</option
                                   >
                                   {#each transportComing as coming}
@@ -1451,7 +1506,7 @@
                                     .transportReturnNameError
                                     ? 'border-pink-600 ring-2 ring-pink-200'
                                     : 'border-gray-300'}"
-                                  bind:value={selectedTransportReturnName}
+                                  bind:value={selectedTransportReturnName[row.id]}
                                   on:input={handleInput(
                                     row,
                                     "transportReturnName"
@@ -1476,7 +1531,7 @@
                                   Please select transport return.
                                 </span>
                               </td>
-                             <!-- mobile -->
+                              <!-- mobile -->
                               <td
                                 ><input
                                   type="text"
@@ -1492,7 +1547,7 @@
                                     ? ''
                                     : 'hidden'}  error-message text-pink-600 text-xs"
                                 >
-                                  Please enter mobile number.
+                                  Mobile should be 10 digit long 
                                 </span>
                               </td>
                               <!-- pincode -->
@@ -1511,7 +1566,7 @@
                                     ? ''
                                     : 'hidden'}  error-message text-pink-600 text-xs"
                                 >
-                                  Please enter your pincode.
+                                  Please enter 6 digit pincode.
                                 </span>
                               </td>
                               <!-- gender -->
@@ -1609,7 +1664,7 @@
                                   readonly
                                 />
                               </td>
-                             <!-- amount -->
+                              <!-- amount -->
                               <td
                                 ><input
                                   type="text"
@@ -1635,7 +1690,7 @@
                                     ? ''
                                     : 'hidden'}  error-message text-pink-600 text-xs"
                                 >
-                                  Please enter aadhar number.
+                                  Please enter 12 digit aadhar number.
                                 </span>
                               </td>
                               <!-- delete button -->
@@ -1669,6 +1724,15 @@
                   {/if}
                 </div>
               {/if}
+            </div>
+
+            <!-- total amount -->
+            <div class="flex mt-4 mb-2 gap-3 items-center">
+              <h2>Total</h2>
+              <span>=</span>
+              <span class="text-xl text-green-600"
+                >{totalAmountOfUsers > 0 ? totalAmountOfUsers : "0"}</span
+              >
             </div>
 
             <!-- Accordion for payment history -->
@@ -1733,8 +1797,8 @@
                             >
                               {#each payment.participants as participant}
                                 {participant.participantsName.length}
-                              {/each}</td
-                            >
+                              {/each}
+                            </td>
                           </tr>
                         {/each}
                       </tbody>
@@ -1759,16 +1823,19 @@
 
           <div class="flex items-center mt-2">
             <button
+              on:click={(e) => submitForm(e, "save")}
               type="submit"
               style="font-weight: 600;"
               class="bg-[#00bdfe] text-sm text-white tracking-[0.05rem] hover:bg-blue-500 rounded-md py-1.5 px-3 border border-blue-500"
               >Save</button
             >
             <button
+              on:click={(e) => submitForm(e, "pay")}
               style="font-weight: 600;"
               class="bg-[#00bdfe] mx-3 text-sm text-white tracking-[0.05rem] hover:bg-blue-500 rounded-md py-1.5 px-3 border border-blue-500"
-              >Pay</button
             >
+              Pay
+            </button>
             <button
               on:click={cancelSubmitForm}
               style="font-weight: 600;"

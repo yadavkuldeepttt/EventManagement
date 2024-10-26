@@ -7,6 +7,7 @@ import authRoutes from "./routes/authRoutes.js";
 import contestantController from "./controllers/contestantController.js";
 import contestController from "./controllers/contestController.js";
 import participantRoutes from "./routes/participantRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
 import { OAuth2Client } from 'google-auth-library';
 
 dotenv.config();
@@ -24,6 +25,7 @@ app.use("/api/contestants", contestantController);
 app.use("/api/contest", contestController);
 app.use("/uploads/images", express.static("uploads/images"));
 app.use("/uploads/contest", express.static("uploads/contest"));
+app.use('/api/payment',paymentRoutes);
 
 
 // Google OAuth2 client setup
@@ -57,6 +59,7 @@ app.post('/api/auth/google', async (req, res) => {
     res.status(401).json({ message: 'Invalid token' });
   }
 });
+
 
 // app.use("/api/users", userRoutes);
 

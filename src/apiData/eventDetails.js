@@ -1,5 +1,3 @@
-
-
 export const eventDetails = [
   {
     id: 1,
@@ -86,37 +84,127 @@ export const eventDetails = [
 
     rateRules: [
       {
-        id: "lg2dg10vnpuddt",
-        name: "student",
-        rules: [
+        ruleId: "lg2dg10vnpsuddt",
+        category: "kid",
+        conditions: [
           {
-            id: "lg2dg10vnw",
-            name: "age",
-            op: "lte",
+            ruleId: "lg2dg10vsnw",
+            field: "age",
+            operator: "lte",
+            value: 5,
+          },
+        ],
+        amountConditions: [
+          {
+            ruleId: "lsg2dga1s0vndw",
+            description: "full entry",
+            actionType: "entry",
+            operator: "full",
+            amount: 0,
+          },
+        ],
+        baseAmount: 0,
+      },
+      {
+        ruleId: "lg2dg10vnpuddt",
+        category: "student",
+        conditions: [
+          {
+            ruleId: "lg2dg10vnw",
+            field: "age",
+            operator: "lte",
             value: 18,
           },
         ],
-
-        amount: 120,
+        amountConditions: [
+          {
+            ruleId: "lg2dga10vndw",
+            description: "entry after 10pm",
+            actionType: "entry",
+            operator: "after",
+            time: 22,
+            amount: 70,
+          },
+          {
+            ruleId: "lg2dga10vnw",
+            description: "entry after 2pm",
+            actionType: "entry",
+            operator: "after",
+            time: 14,
+            amount: 80,
+          },
+          {
+            ruleId: "lsg2dga10vndw",
+            description: "full entry",
+            actionType: "entry",
+            operator: "full",
+            amount: 120,
+          },
+        ],
+        baseAmount: 120,
       },
       {
-        id: "lg2dg10vnpudsdt",
-        name: "adult",
-        rules: [
+        ruleId: "lg2dg10vnpudsdt",
+        category: "adult",
+        conditions: [
           {
-            id: "lg2dg10vnq",
-            name: "age",
-            op: "gt",
+            ruleId: "lg2dg10vnq",
+            field: "age",
+            operator: "gt",
             value: 18,
           },
         ],
-
-        amount: 150,
+        amountConditions: [
+          {
+            ruleId: "zzlg2dga10svndw",
+            description: "entry after 10pm",
+            actionType: "entry",
+            operator: "after",
+            time: 22,
+            amount: 80,
+          },
+          {
+            ruleId: "lzzg2dgsas10vnw",
+            description: "entry after 2pm",
+            actionType: "entry",
+            operator: "after",
+            time: 14,
+            amount: 110,
+          },
+          {
+            ruleId: "lzzsg2adga10avndw",
+            description: "full entry",
+            actionType: "entry",
+            operator: "full",
+            amount: 150,
+          },
+        ],
+        baseAmount: 150,
       },
       {
-        id: "lg2dg10vnd2dsdt",
-        name: "default",
-        amount: 140,
+        ruleId: "lg2dg10vnd2dsdt",
+        category: "default",
+        baseAmount: 150,
+        conditions: [
+          {
+            description: "new condition 1",
+            ruleId: "lljnfuqj5o0ku",
+          },
+          {
+            description: "new condition 2",
+            ruleId: "lm6x8gow2e95gr",
+          },
+        ],
+        amountConditions: [
+          {
+            ruleId: "lg2d10vndw",
+            description: "entry after 10pm",
+            actionType: "entry",
+            operator: "after",
+            time: 22,
+            amount: 150,
+          },
+        ],
       },
     ],
   },
@@ -217,12 +305,10 @@ export const eventDetails = [
 ];
 
 export function findId(id) {
-  const detail = eventDetails.find((event) => 
-  {  
-    console.log(event.id, "id", id,"sa");
-    console.log(event.id == id,"event.id==id");
-    return event.id == id
-    } 
-  );
+  const detail = eventDetails.find((event) => {
+    console.log(event.id, "id", id, "sa");
+    console.log(event.id == id, "event.id==id");
+    return event.id == id;
+  });
   return detail;
 }
